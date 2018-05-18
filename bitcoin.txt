@@ -1,0 +1,37 @@
+比特币1.0代码阅读
+
+1 挖矿
+BitcoinMiner 挖矿主函数
+1) GetNextWorkRequired 确定工作量
+2) ConnectInputs 区块中交易检查
+  --VerifySignature 校验交易
+      --EvalScript执行脚本 这里只要校验 utxp是否合法
+3) 拷贝区块header进行hash 通过调整头部 nNonce值知道满足要求 责任务挖矿成功
+
+
+
+2 共识
+ProcessMessage 主消息处理函数
+1) block 命令字 处理共识
+2) ProcessBlock
+   --CheckBlock 区块检查
+      --CheckTransaction 交易检查 (这里还有疑问,这里只做了基础的检查没看到对CTxIn做对应的utxo做检查)
+3) 检查通过则加入到本地
+
+
+3 打包交易
+ProcessMessage 主消息处理函数
+1) tx 命令字 打包交易
+2) AcceptTransaction
+   --AcceptTransaction
+     --ConnectInputs 这里校验了 是否是合法输入
+
+
+4 节点互通
+0.1.0 版本么有实现p2p的功能 节点的发现在 irc文件里面
+ThreadIRCSeed
+进入 chat.freenode.net 聊天室 然后发现其他节点。。。。
+
+对比了 0.12版本和最新的版本
+更多是在模块化,周边功能方面做了优化,其核心的思想，数据结构改动不大。不得不佩服 Satoshi Nakamoto 的设计思想
+https://satoshi.nakamotoinstitute.org/emails/cryptography/ 这里是Satoshi Nakamoto早期与一些密码人士的邮件。看下这些邮件更有利于理解比特币系统
